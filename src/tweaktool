@@ -124,15 +124,13 @@ tweak_backup(){
 	current_time=$(date "+%Y-%m-%d_%H:%M:%S")
 	bak_dir="$base_dir"/"$jailbreak""备份_""$current_time"
 	tweak_dir="$bak_dir"/插件备份
-	snowboard_dir="$bak_dir"/滑雪板主题
-	nice_dir="$bak_dir"/NiceBarX
 	callassist_dir="$bak_dir"/电话助手主题
+	snapper3actions_dir="$bak_dir"/Snapper3截图图标
 	tweaksetting_dir="$bak_dir"/插件配置备份
 	sources_dir="$bak_dir"/源地址备份
 	mkd $tweak_dir
-	mkd $snowboard_dir
-	mkd $nice_dir
 	mkd $callassist_dir
+	mkd $snapper3actions_dir
 	mkd $tweaksetting_dir
 	mkd $sources_dir
 	chown -R 501:501 $bak_dir 2> /dev/null
@@ -327,10 +325,8 @@ dpkg_fill(){
 setting_backup(){
 	echo -e "${nco} 正在进行配置备份，请耐心等待...${nco}"
 	
-	cp -a /Library/Themes/* "$snowboard_dir"/ 2> /dev/null
-	cp -a /var/mobile/Library/NiceiOS/NiceBarX/* "$nice_dir"/ 2> /dev/null
 	cp -a /Library/CallAssist/theme/* "$callassist_dir"/ 2> /dev/null
-	cp -a /User/NiceiOS "$tweaksetting_dir"/ 2> /dev/null
+	cp -a /Library/PreferenceBundles/Snapper3Preferences.bundle/images/actions/* "$snapper3actions_dir"/ 2> /dev/null
 	cp -a /User/Library "$tweaksetting_dir"/ 2> /dev/null
 	cp -a /etc/apt/sources.list.d/* "$sources_dir"/ 2> /dev/null
 	clear
@@ -401,15 +397,13 @@ backup(){
 			current_time=$(date "+%Y-%m-%d_%H:%M:%S")
 			bak_dir="$base_dir"/"$jailbreak""备份_""$current_time"
 			tweak_dir="$bak_dir"/插件备份
-			snowboard_dir="$bak_dir"/滑雪板主题
-			nice_dir="$bak_dir"/NiceBarX
 			callassist_dir="$bak_dir"/电话助手主题
+			snapper3actions_dir="$bak_dir"/Snapper3截图图标
 			tweaksetting_dir="$bak_dir"/插件配置备份
 			sources_dir="$bak_dir"/源地址备份
 			mkd $tweak_dir
-			mkd $snowboard_dir
-			mkd $nice_dir
 			mkd $callassist_dir
+			mkd $snapper3actions_dir
 			mkd $tweaksetting_dir
 			mkd $sources_dir
 			chown -R 501:501 $bak_dir 2> /dev/null
@@ -445,32 +439,25 @@ recover_tweak(){
 }
 
 recover_setting(){
-	snowboard_dir="$bak_dir"/滑雪板主题
-	nice_dir="$bak_dir"/NiceBarX
 	callassist_dir="$bak_dir"/电话助手主题
+	snapper3actions_dir="$bak_dir"/Snapper3截图图标
 	tweaksetting_dir="$bak_dir"/插件配置备份
 	sources_dir="$bak_dir"/源地址备份
 	sleep 2s
 	echo
 	echo -e "${nco} 开始恢复插件配置${nco}"
-	cp -a "$snowboard_dir"/* /Library/Themes/ 2> /dev/null
-	if [ -d "$nice_dir" -a "`ls -A "$nice_dir"`" != "" ]; then
-		mkd /var/mobile/Library/NiceiOS/NiceBarX
-		cp -a "$nice_dir"/* /var/mobile/Library/NiceiOS/NiceBarX/
-		chown -R 0:0 /var/mobile/Library/NiceiOS/NiceBarX/
-		chmod -R 0755 /var/mobile/Library/NiceiOS/NiceBarX/
-	fi
 	if [ -d "$callassist_dir" -a "`ls -A "$callassist_dir"`" != "" ]; then
 		mkd /Library/CallAssist/theme
 		cp -a "$callassist_dir"/* /Library/CallAssist/theme/
 		chown -R 0:0 /Library/CallAssist/theme/
 		chmod -R 0755 /Library/CallAssist/theme/
 	fi
-	cp -a "$tweaksetting_dir"/* /User/ 2> /dev/null
-	if [ -d "$tweaksetting_dir"/NiceiOS -a "`ls -A "$tweaksetting_dir"/NiceiOS`" != "" ]; then
-		chown -R 0:0 /User/NiceiOS
-		chmod -R 0755 /User/NiceiOS
+	if [ -d "$snapper3actions_dir" -a "`ls -A "$snapper3actions_dir"`" != "" ]; then
+		mkd /Library/PreferenceBundles/Snapper3Preferences.bundle/images/actions
+		cp -a "$snapper3actions_dir"/* /Library/PreferenceBundles/Snapper3Preferences.bundle/images/actions/
+		chown -R 0:0 /Library/PreferenceBundles/Snapper3Preferences.bundle/images/actions/
 	fi
+	cp -a "$tweaksetting_dir"/* /User/ 2> /dev/null
 	chown -R 501:501 /User/Library/
 	chmod -R 0755 /User/Library/
 	cp -a "$sources_dir"/* /etc/apt/sources.list.d/ 2> /dev/null

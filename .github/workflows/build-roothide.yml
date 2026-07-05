@@ -23,6 +23,10 @@ jobs:
           ! grep -Fq '环境清单' src/tweaktool
           ! grep -Fq '插件偏好设置' src/tweaktool
           ! grep -Fq "\\033[1m" src/tweaktool
+          ! grep -Fq 'snowboard_dir' src/tweaktool
+          ! grep -Fq 'nice_dir' src/tweaktool
+          grep -Fq 'cp -a /Library/PreferenceBundles/Snapper3Preferences.bundle/images/actions/* "$snapper3actions_dir"/' src/tweaktool
+          grep -Fq 'cp -a "$snapper3actions_dir"/* /Library/PreferenceBundles/Snapper3Preferences.bundle/images/actions/' src/tweaktool
       - name: Build deb
         run: chmod +x scripts/build.sh && scripts/build.sh
       - name: Validate deb
