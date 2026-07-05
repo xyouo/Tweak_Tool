@@ -1,0 +1,40 @@
+name: Build RootHide package
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate source
+        run: |
+          bash -n src/tweaktool
+          bash -n src/一键备份和恢复工具.sh
+          grep -Fq 'thread_num=5' src/tweaktool
+          grep -Fq '[[ "$i" != "control" ]]' src/tweaktool
+          grep -Fq 'cp -a "$i" "$rootdir$i"' src/tweaktool
+          grep -Fq 'name="${name//\//／}"' src/tweaktool
+          ! grep -Fq '环境清单' src/tweaktool
+          ! grep -Fq '插件偏好设置' src/tweaktool
+          ! grep -Fq "\\033[1m" src/tweaktool
+      - name: Build deb
+        run: chmod +x scripts/build.sh && scripts/build.sh
+      - name: Validate deb
+        run: |
+          package="$(echo build/com.kitten.tweaktool_*.deb)"
+          dpkg-deb --info "$package"
+          dpkg-deb --contents "$package"
+          test "$(dpkg-deb -f "$package" Architecture)" = "iphoneos-arm64e"
+          test "$(dpkg-deb -f "$package" Package)" = "com.kitten.tweaktool"
+          test "$(dpkg-deb -f "$package" Name)" = "一键备份和恢复工具-RootHide"
+          ! dpkg-deb -f "$package" Depends | grep -q zstd
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tweak-tool-roothide-arm64e
+          path: build/com.kitten.tweaktool_*.deb

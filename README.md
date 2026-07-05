@@ -1,3 +1,5 @@
+> RootHide arm64e 适配说明与构建方法见 [README-RootHide.md](README-RootHide.md)。
+
 <!-- PROJECT LOGO -->
 
 <p align="center">
